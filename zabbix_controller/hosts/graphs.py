@@ -1,6 +1,20 @@
+import re
+
+import click
+
 from .command import hosts
-from ..utils import *
+from ..utils import validate_match, check_dry_run, ask_graphs
 from . import ZabbixCTL
+
+
+def get_graphs(zapi, host, match=None):
+    _graphs = zapi.graph.get(filter={'hostid': host['hostid']})
+    if match is not None:
+        _graphs = list(filter(
+            lambda graph: re.search(list(match.values())[0], graph[list(match.keys())[0]]) is not None,
+            _graphs,
+        ))
+    return _graphs
 
 
 @hosts.group(help='host graph')
@@ -43,10 +57,6 @@ def _list(obj):
 @click.pass_obj
 @check_dry_run
 def delete(obj: ZabbixCTL):
-    if obj.dry_run:
-        click.echo(f'{obj}')
-        exit(0)
-
     for graph in obj.graphs:
         selected_graphs = ask_graphs(graph['hostname'], graph['graphs'])
         if len(selected_graphs) == 0:

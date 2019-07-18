@@ -29,7 +29,7 @@ def test_validate_time_match():
         ('errors_from:4710-', {'key': 'errors_from', 'from': 4710, 'to': int(time.time())}, True),
     ]
     for data in table:
-        values = validate_time_match(ctx, param, data[0])
+        values = validate_time_range(ctx, param, data[0])
         assert (values['key'] == data[1]['key']) is data[2]
         assert (values['from'] == data[1]['from']) is data[2]
         assert (data[1]['to'] - 5 <= values['to'] <= data[1]['to']) is data[2]  # テストの実行による5秒の遅れを許す

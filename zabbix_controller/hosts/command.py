@@ -1,10 +1,13 @@
 from pprint import pprint
 
+import click
+
 from . import main, ZabbixCTL
-from ..utils import *
+from ..utils import validate_match, validate_time_range, validate_json, check_dry_run, ask_hosts
+from .apis import get_hosts
 
 
-@main.group(help='hosts command')
+@main.group(help='host command entry point')
 @click.option('-m', '--match',
               callback=validate_match,
               help=('For search host by regex. Using re.search() in python. \n'
@@ -13,23 +16,34 @@ from ..utils import *
                     'ex2) hostid:41 -> This matches 4123232, 111141, ...'
                     'ex3) name:^$ -> This matches empty string')
               )
-@click.option('-tm', '--time-match',
-              callback=validate_time_match,
-              help=('For search time pattern. Using unixtime\n'
+@click.option('-tr', '--time-range',
+              callback=validate_time_range,
+              help=('For search by time range. Using unixtime\n'
                     'key:[from]-[to].\n'
-                    'If you use --match at the same time, these mean and operator'
-                    'From must be less than to.\n'
-                    'ex1) errors_from:48120471-14834017 -> 48120471~14834017\n'
+                    'If you use --match at the same time, these mean "and operator"'
+                    '"from" must be less than "to".\n'
+                    'ex1) errors_from:48120471-140834017 -> 48120471~140834017\n'
                     'ex2) errors_from:- -> 0~[now unixtime]\n'
                     'ex3) disable_until:-7184 -> 0~7184\n')
               )
 @click.pass_obj
-def hosts(obj: ZabbixCTL, match, time_match):
+def hosts(obj, match, time_range):
     """
-    hostsコマンドのエントリーポイント
+    Parameters
+    ----------
+    obj: ZabbixCTL
+        Including command state.
+    match: dict
+        Key is host property in zabbix api.
+        Value is regular expresion used by re.
+        Each items is chained && operator, not ||.
+    time_range: dict
+        Keys are 'key', 'from', 'to'.
+        Values are str, int, int.
+        'from' <= host['key'] <= 'to'
+
     """
-    pprint(match)
-    _hosts = get_hosts(obj.zapi, match=match, time_match=time_match)
+    _hosts = get_hosts(obj.zapi, match=match, time_range=time_range)
 
     if len(_hosts) == 0:
         print('There is no host')
@@ -40,9 +54,14 @@ def hosts(obj: ZabbixCTL, match, time_match):
 
 @hosts.command(name='list', help='list hosts')
 @click.pass_obj
-def _list(obj: ZabbixCTL):
+def _list(obj):
     """
-    hostsをリストする
+    List hosts.
+
+    Parameters
+    ----------
+    obj: ZabbixCTL
+        Including command state.
     """
     click.echo(obj.hosts)
 
@@ -50,14 +69,15 @@ def _list(obj: ZabbixCTL):
 @hosts.command(help='delete hosts')
 @click.pass_obj
 @check_dry_run
-def delete(obj: ZabbixCTL):
+def delete(obj):
     """
-    hostを削除する
-    """
-    if obj.dry_run:
-        click.echo(f'{obj}')
-        exit(0)
+    Delete hosts.
 
+    Parameters
+    ----------
+    obj: ZabbixCTL
+        Including command state.
+    """
     selected_hosts = ask_hosts(obj.hosts)
     if len(selected_hosts) == 0:
         print('No host is selected.')
@@ -73,14 +93,14 @@ def delete(obj: ZabbixCTL):
 @hosts.command(help='disable hosts')
 @click.pass_obj
 @check_dry_run
-def disable(obj: ZabbixCTL):
+def disable(obj):
     """
-    hostを無効にする
-    """
-    if obj.dry_run:
-        click.echo(f'{obj}')
-        exit(0)
+    Disable hosts. It is deprecated.
 
+    Parameters
+    ----------
+    obj: ZabbixCTL
+    """
     selected_hosts = ask_hosts(obj.hosts)
     if len(selected_hosts) == 0:
         print('No host is selected.')
@@ -99,13 +119,16 @@ def disable(obj: ZabbixCTL):
 @click.option('-d', '--data', callback=validate_json, help='data for update', required=True)
 @click.pass_obj
 @check_dry_run
-def update(obj: ZabbixCTL, data):
+def update(obj, data):
     """
-    dataを渡してそれを使って更新する
-    """
-    if obj.dry_run:
-        click.echo(f'{obj}')
-        exit(0)
+    Update hosts.
 
+    Parameters
+    ----------
+    obj: ZabbixCTL
+        Including command state.
+    data: dict
+        New data
+    """
     # TODO: 作成
     click.echo(data)

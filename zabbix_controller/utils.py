@@ -31,7 +31,7 @@ def validate_match(ctx, param, values):
     return values
 
 
-def validate_time_match(ctx, param, values):
+def validate_time_range(ctx, param, values):
     """
     key:[unixtime]-[unixtime]をパースする
     errors_from:174134341-1841471834
@@ -64,34 +64,6 @@ def validate_json(ctx, param, values):
     return values
 
 
-def get_hosts(zapi, match=None, time_match=None):
-    """
-    return hosts: [dict]
-    """
-
-    # output=["name", "available"]等指定可能だが面倒なので全部持ってくる
-    hosts = zapi.host.get()
-    if match is not None:
-        hosts = list(filter(
-            lambda host: re.search(list(match.values())[0], host[list(match.keys())[0]]) is not None,
-            hosts,
-        ))
-
-    if time_match is not None:
-        hosts = list(filter(
-            lambda host: time_match['from'] <= int(host[time_match['key']]) <= time_match['to'],
-            hosts,
-        ))
-    return hosts
-
-
-def update_hosts(zpai, host, data):
-    """
-    host をupdateする
-    """
-    # TODO: updateする
-
-
 def ask_hosts(hosts):
     """
     host を選択する
@@ -110,15 +82,6 @@ def ask_hosts(hosts):
 
     return selected_hosts
 
-
-def get_graphs(zapi, host, match=None):
-    graphs = zapi.graph.get(filter={'hostid': host['hostid']})
-    if match is not None:
-        graphs = list(filter(
-            lambda graph: re.search(list(match.values())[0], graph[list(match.keys())[0]]) is not None,
-            graphs,
-        ))
-    return graphs
 
 
 def ask_graphs(hostname, graphs):
