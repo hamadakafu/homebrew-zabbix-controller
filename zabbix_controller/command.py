@@ -15,8 +15,10 @@ from .utils import *
 @click.option('--dry-run', default=False, is_flag=True,
               help=('Activate debug mode.\n'
                     'Create, Update, Delete API are not executed.\n'
-                    'Only Get API is executed.'),
-              )
+                    'Only Get API is executed.'))
+@click.option('-i', '--interactive', default=False, is_flag=True,
+              help=('Turn on interactive mode.\n'
+                    'Confirmation is still available.'))
 @click.pass_context
 def main(
         ctx,
@@ -24,6 +26,7 @@ def main(
         username, password,
         basicauth_username, basicauth_password,
         dry_run,
+        interactive,
 ):
     """
     entry point
@@ -35,7 +38,4 @@ def main(
     # log.setLevel(logging.DEBUG)
 
     zapi = zabbix_auth(apiserver_address, username, password, basicauth_username, basicauth_password)
-    ctx.obj = ZabbixCTL(zapi, dry_run)
-
-    if ctx.obj.dry_run:
-        click.echo('zabbixctl is running in --dry-run')
+    ctx.obj = ZabbixCTL(zapi, dry_run=dry_run, interactive=interactive)

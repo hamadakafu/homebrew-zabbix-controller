@@ -23,39 +23,73 @@ def zabbix_auth(host, username, password, basicauth_username=None, basicauth_pas
 
 
 def validate_match(ctx, param, values):
-    if values is not None:
-        if ':' not in values:  # --host-patternを指定するなら:区切りでしていする必要あるので
-            raise click.BadParameter('Please include ":" in --host-pattern. Run --help')
-        k, v = values.split(':', 1)  # 最初に現れた":"に対してのみsplitする
-        values = {k: v}
+    """
+    Parameters
+    ----------
+    ctx: click.Context
+        click Context object
+    param: click.param
+        I don't know. Not using.
+    values: str
+        Json string. One dict must be changed [dict]. When filtering, use this, thinking this is list.
+    Returns
+    -------
+    values: [dict]
+    """
+    if values is None:
+        return None
+
+    values = validate_json(ctx, param, values)
+
+    if isinstance(values, dict):
+        values = [values]
+
+    if not isinstance(values, list):
+        raise TypeError('logic error, must be list or dict')
+
     return values
 
 
 def validate_time_range(ctx, param, values):
     """
-    key:[unixtime]-[unixtime]をパースする
+    key:[unixtime]-[unixtime]
     errors_from:174134341-1841471834
     return {'key': 'errors_from', from: 174134341, to: 1841471834}
     errors_from:-
-    return {'key': errors_from', from: 0, to: [今の時間]}
+    return {'key': errors_from', from: 0, to: [now unixtime]}
     """
-    if values is not None:
-        if ':' not in values:
-            raise click.BadParameter('Please include ":" in --host-pattern. Run --help')
-        k, v = values.split(':', 1)  # 最初に現れた":"に対してのみsplitする
-        f, t = v.split('-')
-        # -1047のとき 0-1047にする
-        f = 0 if f == '' else int(f)
-        # 71414-のとき 71414-[今の時間]にする
-        t = int(time.time()) if t == '' else int(t)
-        values = {'key': k, 'from': f, 'to': t}
+    if values is None:
+        return None
+
+    if ':' not in values:
+        raise click.BadParameter('Please include ":" in --host-pattern. Run --help')
+
+    k, v = values.split(':', 1)  # ignore second ':'
+    f, t = v.split('-')
+    # -1047 is 0-1047
+    f = 0 if f == '' else int(f)
+    # 71414 is 71414-[now unixtime]
+    t = int(time.time()) if t == '' else int(t)
+    values = {'key': k, 'from': f, 'to': t}
     return values
 
 
 def validate_json(ctx, param, values):
     """
-    json形式のデータをdictに変換する
+    Parameters
+    ----------
+    ctx: click.Context
+        click Context object
+    param: click.param
+        I don't know. Not using.
+    values: str
+        Json string.
+    Returns
+    -------
+    values: dict
     """
+    if values is None:
+        return None
     try:
         values = json.loads(values)
     except json.JSONDecodeError:
@@ -69,7 +103,7 @@ def ask_hosts(hosts):
     host を選択する
     return selected_hosts: [dict]
     """
-    print('\n')  # ターミナルをリフレッシュ
+    click.echo('\n')  # ターミナルをリフレッシュ
 
     select_hostnames_cli = Check(
         prompt="Choose instance: input <space> to choose, then input <enter> to finish",
@@ -83,29 +117,28 @@ def ask_hosts(hosts):
     return selected_hosts
 
 
-
-def ask_graphs(hostname, graphs):
+def ask_graphs(graphs):
     """
-    host: dict
     1つのホストに対して行う
     return graphs: [dicts]
     """
-    print('\n')  # ターミナルをリフレッシュ
+    click.echo('\n')  # terminal new line
     choices = ['all']
-    choices.extend([graph['name'] for graph in graphs])
+    choices.append([(graph['host'], graph['name']) for graph in graphs])
 
     # 入力のバリデーションするのでwhile回す
     while True:
-        select_graphnames_cli = Check(
-            prompt=f"Choose graph in {hostname}: input <space> to choose, then input <enter> to finish",
+        select_graphs_cli = Check(
+            prompt=f"Choose graph: input <space> to choose, then input <enter> to finish",
             choices=choices,
             align=4,
             margin=1,
         )
-        graphnames = select_graphnames_cli.launch()
-        if 'all' in graphnames:
-            if len(graphnames) != 1:  # all 選んだのに他の選ぶのはおかしい
-                print('all選んで他の選ぶのは無効')
+        selected_graphs = select_graphs_cli.launch()
+        if 'all' in selected_graphs:
+            if len(selected_graphs) != 1:
+                # When select all, be able to select only all.
+                click.echo('Select only all.')
                 continue
             else:
                 selected_graphs = list(filter(lambda graph: graph['name'] in choices, graphs))
@@ -118,7 +151,7 @@ def ask_graphs(hostname, graphs):
 def check_dry_run(func):
     @wraps(func)
     def wrapped(obj: ZabbixCTL, *args, **kwargs):
-        if obj.dry_run:
+        if obj.main_options['dry_run']:
             click.echo(f'{obj}')
             # TODO: 関数のテストの仕方を考えている...zapiが呼ばれた回数をテストすれば良さそう
             exit(0)
