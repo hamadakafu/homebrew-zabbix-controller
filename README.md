@@ -1,47 +1,47 @@
-# Zabbix CLI
+# 1. Zabbix CLI
 This software is released under the MIT License, see LICENSE.txt.
-## Example
-### Valid Command
+## 1.1 Example
+### 1.1.1 Valid Command
 `zabbix_controller -u username -p password hosts list`
 
 `zabbix_controller -u username -p password hosts -m name:^server$ list`
-### Invalid Command
+### 1.1.2 Invalid Command
 `zabbix_controller hosts -u username -p password list`
 
 `zabbix_controller -u username -p password hosts list -m name:^server$ `
 
-## zabbixctl [options] command ...
-### Options
+## 1.2 zabbixctl [options] command ...
+### 1.2.1 Options
 These options are only set at `zabbixctl [options] command ...`.
 `zabbixctl command [options] ...` is not accepted.
-#### --help
+#### 1.2.1.1 --help
 ```bash
 zabbixctl --help
 ```
-#### --apiserver-address, -aa
+#### 1.2.1.2 --apiserver-address, -aa
 ```bash
 zabbixctl -aa http://localhost:8081
 ```
-#### --username, -u, --password, -p
+#### 1.2.1.3 --username, -u, --password, -p
 Used for zabbix login
 ```bash
 zabbixctl --username Admin --password zabbix_password
 ```
-#### --basicauth_username, -bu, --basicauth_password, -bp
+#### 1.2.1.4 --basicauth_username, -bu, --basicauth_password, -bp
 Used for basic authentication
 ```bash
 zabbixctl -bu alis -bp alis_password
 ```
-#### --dry-run
+#### 1.2.1.5 --dry-run
 If you set `--dry-run`, only get API is executed, then ZabbixCTL state is printed.
 Create, update, delete like API is not executed.
 ```bash
 zabbixctl --dry-run
 ```
 
-## zabbixctl host `Options` `Command` ...
-### Options
-#### `-m, --match`
+## 1.3 zabbixctl host `Options` `Command` ...
+### 1.3.1 Options
+#### 1.3.1.1 `-m, --match`
 Search host using json like object.
 Search key, then apply value.
 In the example below, 
@@ -58,7 +58,7 @@ This command mean `("name": "some_name" and "hostid": "^1") or "name": "other_na
 zabbixctl hosts -m '[{"name": "some_name", "hostid": "^1"}, {"name": "other_name"}]' list
 ```
 
-#### `-tr, --time-range`
+#### 1.3.1.2 `-tr, --time-range`
 This option is able to specify time range.
 If you use --match at the same time, used by "and operator".
 ```
@@ -76,24 +76,24 @@ zabbixctl hosts -m '[{"name": "some_name", "hostid": "^1"}, {"name": "other_name
 ```
 
 
-### Commands
-#### `list`
+### 1.3.2 Commands
+#### 1.3.2.1 `list`
 list up host
-#### `delete`
+#### 1.3.2.2 `delete`
 delete host
 - options
     - `-y, --yes`
 ```bash
 zabbixctl hosts -m '{"name": "some_name"}' delete -y
 ```
-#### `disable`
+#### 1.3.2.3 `disable`
 disable host
 - options
     - `-y, --yes`
 ```bash
 zabbixctl hosts -m '{"name": "some_name"}' disable -y
 ```
-#### `update`
+#### 1.3.2.4 `update`
 update host
 - options
     - `-d, --data`
@@ -106,29 +106,29 @@ zabbixctl hosts -m '{"name": "some_name"}' update -d '{"state": "1"}' -y
 zabbixctl hosts -m '{"name": "some_name"}' disable -y
 ```
 
-## zabbixctl host graphs `Options` `Command`
-### Command
-#### `list`
-#### `delete`
+## 1.4 zabbixctl host graphs `Options` `Command`
+### 1.4.1 Command
+#### 1.4.2 `list`
+#### 1.4.3 `delete`
 - options
     - `-y, --yes`
-### Options
-#### `-m, --match`
+### 1.4.2 Options
+#### 1.4.2.1 `-m, --match`
 
 This command delete graphs which is in hosts which is matched regex.
 ```bash
 zabbixctl hosts -m '{"name": "some_name"}' graphs delete -y
 ```
 
-## zabbixctl host interfaces `Options` `Command`
-### Command
-#### `list`
-#### `usedns`
+## 1.5 zabbixctl host interfaces `Options` `Command`
+### 1.5.1 Command
+#### 1.5.1.1 `list`
+#### 1.5.1.2 `usedns`
 Use dns, not ipaddress
 - options
     - `-y, --yes`
 
-#### `update`
+#### 1.5.1.3 `update`
 These are same command.
 - options
     - `-y, --yes`
