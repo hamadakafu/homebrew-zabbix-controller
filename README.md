@@ -1,5 +1,5 @@
 # Zabbix CLI
-
+This software is released under the MIT License, see LICENSE.txt.
 ## Example
 ### Valid Command
 `zabbix_controller -u username -p password hosts list`
