@@ -1,8 +1,8 @@
-from . import command
+import zabbix_controller
 
 
 def call_command():
-    command.main()
+    zabbix_controller.command.main()
 
 
 if __name__ == '__main__':

@@ -17,6 +17,8 @@ bullet = "^2.1"
 pytest = "^3.0"
 pylint = "^2.3"
 autopep8 = "^1.4"
+pyinstaller = "^3.5"
+macholib = "^1.11"
 
 [tool.poetry.scripts]
 # zabbix_controllerディレクトリのzabbix_controllerファイルのcall_command関数を実行

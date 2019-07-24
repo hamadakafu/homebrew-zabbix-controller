@@ -79,3 +79,7 @@ f string はrepr()を使う
 filter={'hostid': 10000}   # ok
 filter={'hostid': '10000'} # ok
 ```
+## pyinstaller を使ってバイナリ生成
+```bash
+./makebin.sh
+```

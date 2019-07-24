@@ -2,13 +2,16 @@
 This software is released under the MIT License, see LICENSE.txt.
 ## 1.1 Example
 ### 1.1.1 Valid Command
-`zabbix_controller -u username -p password hosts list`
+```bash
+zabbix_controller -u username -p password hosts list
+zabbix_controller -u username -p password hosts -m name:^server$ list
+```
 
-`zabbix_controller -u username -p password hosts -m name:^server$ list`
 ### 1.1.2 Invalid Command
-`zabbix_controller hosts -u username -p password list`
-
-`zabbix_controller -u username -p password hosts list -m name:^server$ `
+```bash
+zabbix_controller hosts -u username -p password list
+zabbix_controller -u username -p password hosts list -m name:^server$
+```
 
 ## 1.2 zabbixctl [options] command ...
 ### 1.2.1 Options
