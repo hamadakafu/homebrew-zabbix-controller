@@ -1,4 +1,6 @@
+import copy
 import re
+
 from pyzabbix import ZabbixAPI
 
 
@@ -10,7 +12,14 @@ def get_hosts(zapi, match=None, time_range=None):
     ----------
     zapi: ZabbixAPI
     match: [dict]
-        [{'name': 'some_name'}]
+        Regex. Using re package. These conditions are chained by `and` operator.
+        Not Used for API requests.
+        Used after API requests.
+        [{'name': 'some_name', 'hostid': '^1234'}, {'name': 'other_name'}]
+        All items in the dict are chained "and" operator.
+        All dict are chained "or" operator.
+        (name match some_name and hostid match ^1234) or name match other_name
+
     time_range: dict
         {'key': 'error_from', 'from': 0, 'to': int(time.time())}
 
@@ -21,20 +30,36 @@ def get_hosts(zapi, match=None, time_range=None):
     """
 
     hosts = zapi.host.get()
+
     if match is not None:
+        match_hosts = []
         for m in match:
-            hosts = list(filter(
-                lambda host: re.search(list(m.values())[0], host[list(m.keys())[0]]) is not None,
-                hosts,
-            ))
+            hosts_copy = copy.deepcopy(hosts)
+            for k, v in m.items():
+                hosts_copy = list(
+                    filter(
+                        lambda _host: re.search(v, _host[k]) is not None,
+                        hosts_copy,
+                    )
+                )
+
+            match_hosts.extend(hosts_copy)
+
+        match_hosts = list({v['hostid']: v for v in match_hosts}.values()) # unique
+
+    else:
+        match_hosts = copy.deepcopy(hosts)
 
     if time_range is not None:
-        hosts = list(filter(
+        ret = list(filter(
             lambda host: time_range['from'] <= int(host[time_range['key']]) <= time_range['to'],
-            hosts,
+            match_hosts,
         ))
 
-    return hosts
+    else:
+        ret = match_hosts
+
+    return ret
 
 
 def update_hosts(zapi, hosts, data):

@@ -69,9 +69,12 @@ def _list(obj):
 
 
 @hosts.command(help='delete hosts')
+@click.option('-y', '--yes', default=False, is_flag=True,
+              help=('Turn on yes mode.\n'
+                    'No confirmation update or delete.'))
 @click.pass_obj
 @check_dry_run
-def delete(obj):
+def delete(obj, yes):
     """
     Checking dry-run.
     Delete hosts.
@@ -80,6 +83,8 @@ def delete(obj):
     ----------
     obj: ZabbixCTL
         Including command state.
+    yes: bool
+        If yes is true, no confirmation update or delete.
     """
     if obj.main_options['interactive']:
         selected_hosts = ask_hosts(obj.hosts)
@@ -90,17 +95,20 @@ def delete(obj):
         click.echo('There is no host.')
         exit(0)
 
-    if click.confirm(f'delete: {[host["name"] for host in selected_hosts]}',
-                     default=False,
-                     abort=True,
-                     show_default=True):
+    if yes or click.confirm(f'delete: {[host["name"] for host in selected_hosts]}',
+                            default=False,
+                            abort=True,
+                            show_default=True):
         obj.zapi.host.delete(*[host['hostid'] for host in selected_hosts])
 
 
 @hosts.command(help='disable hosts')
+@click.option('-y', '--yes', default=False, is_flag=True,
+              help=('Turn on yes mode.\n'
+                    'No confirmation update or delete.'))
 @click.pass_obj
 @check_dry_run
-def disable(obj):
+def disable(obj, yes):
     """
     Checking dry-run.
     Disable hosts. It is deprecated.
@@ -108,6 +116,8 @@ def disable(obj):
     Parameters
     ----------
     obj: ZabbixCTL
+    yes: bool
+        If yes is true, no confirmation update or delete.
     """
     if obj.main_options['interactive']:
         selected_hosts = ask_hosts(obj.hosts)
@@ -118,10 +128,10 @@ def disable(obj):
         click.echo('There is no host.')
         exit(0)
 
-    if click.confirm(f'disable: {pprint.pformat([host["name"] for host in selected_hosts])}',
-                     default=False,
-                     abort=True,
-                     show_default=True):
+    if yes or click.confirm(f'disable: {pprint.pformat([host["name"] for host in selected_hosts])}',
+                            default=False,
+                            abort=True,
+                            show_default=True):
         data = {'status': 1}
         result = update_hosts(obj.zapi, selected_hosts, data)
         click.echo(pprint.pformat(result))
@@ -129,9 +139,12 @@ def disable(obj):
 
 @hosts.command(help='update hosts')
 @click.option('-d', '--data', callback=validate_json, help='data for update', required=True)
+@click.option('-y', '--yes', default=False, is_flag=True,
+              help=('Turn on yes mode.\n'
+                    'No confirmation update or delete.'))
 @click.pass_obj
 @check_dry_run
-def update(obj, data):
+def update(obj, data, yes):
     """
     Checking dry-run.
     Update hosts.
@@ -142,6 +155,8 @@ def update(obj, data):
         Including command state.
     data: dict
         New data
+    yes: bool
+        If yes is true, no confirmation update or delete.
     """
     if obj.main_options['interactive']:
         selected_hosts = ask_hosts(obj.hosts)
@@ -152,10 +167,10 @@ def update(obj, data):
         click.echo('There is no host.')
         exit(0)
 
-    if click.confirm((f'update: {pprint.pformat([host["name"] for host in selected_hosts])}\n'
-                      f'data: {pprint.pformat(data)}'),
-                     default=False,
-                     abort=True,
-                     show_default=True):
+    if yes or click.confirm((f'update: {pprint.pformat([host["name"] for host in selected_hosts])}\n'
+                             f'data: {pprint.pformat(data)}'),
+                            default=False,
+                            abort=True,
+                            show_default=True):
         result = update_hosts(obj.zapi, selected_hosts, data)
         click.echo(pprint.pformat(result))

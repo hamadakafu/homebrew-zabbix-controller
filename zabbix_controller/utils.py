@@ -124,7 +124,7 @@ def ask_graphs(graphs):
     """
     click.echo('\n')  # terminal new line
     choices = ['all']
-    choices.append([(graph['host'], graph['name']) for graph in graphs])
+    choices.extend([f'{graph["host"]}: {graph["name"]}' for graph in graphs])
 
     # 入力のバリデーションするのでwhile回す
     while True:
@@ -141,10 +141,14 @@ def ask_graphs(graphs):
                 click.echo('Select only all.')
                 continue
             else:
-                selected_graphs = list(filter(lambda graph: graph['name'] in choices, graphs))
-                return selected_graphs
+                return graphs
 
-        selected_graphs = list(filter(lambda graph: graph['name'] in graphnames, graphs))
+        selected_graphs = list(
+            filter(
+                lambda graph: f'{graph["host"]}: {graph["name"]}' in selected_graphs,
+                graphs,
+            )
+        )
         return selected_graphs
 
 
