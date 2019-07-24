@@ -45,7 +45,7 @@ zabbixctl --dry-run
 Search host using json like object.
 Search key, then apply value.
 In the example below, 
-hosts which name key is including `some_name` is listed.
+hosts which name key is including `some_name` are listed.
 ```bash
 zabbixctl hosts -m '{"name": "some_name"}' list
 zabbixctl hosts -m '[{"name": "some_name"}]' list
@@ -133,7 +133,7 @@ These are same command.
 - options
     - `-y, --yes`
 ```bash
-zabbixctl hosts update -d '{"useip": 0}' -y
-zabbixctl hosts update -d '{"useip": "0"}' -y
-zabbixctl hosts usedns -y
+zabbixctl hosts interfaces update -d '{"useip": 0}' -y
+zabbixctl hosts interfaces update -d '{"useip": "0"}' -y
+zabbixctl hosts interfaces usedns -y
 ```
