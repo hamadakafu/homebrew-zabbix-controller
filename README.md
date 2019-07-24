@@ -1,5 +1,4 @@
 # 1. Zabbix CLI
-This software is released under the MIT License, see LICENSE.txt.
 ## 1.1 Example
 ### 1.1.1 Valid Command
 ```bash
@@ -140,3 +139,4 @@ zabbixctl hosts interfaces update -d '{"useip": 0}' -y
 zabbixctl hosts interfaces update -d '{"useip": "0"}' -y
 zabbixctl hosts interfaces usedns -y
 ```
+# LICENSE
