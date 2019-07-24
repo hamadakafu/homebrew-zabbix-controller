@@ -1,10 +1,11 @@
 [tool.poetry]
 name = "zabbix_controller"
-version = "0.1.10"
+version = "0.1.11"
 description = ""
 authors = ["hamadakafu <kafu.h1998@gmail.com>"]
 readme = "README.md"
 license = "MIT"
+repository = "https://github.com/hamadakafu/zabbix-controller"
 
 [tool.poetry.dependencies]
 python = "^3.7"
