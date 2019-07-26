@@ -1,6 +1,6 @@
 require "formula"
 
-class HomebrewZabbixController < Formula
+class Zabbixctl < Formula
   desc ""
   homepage ""
   # url "https://github.com/hamadakafu/homebrew-zabbix-controller/releases/download/v0.1.11/zabbixctl"
