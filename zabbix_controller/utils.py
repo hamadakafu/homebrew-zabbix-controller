@@ -1,4 +1,4 @@
-import re
+import sys
 import time
 import json
 from functools import wraps
@@ -11,6 +11,28 @@ from .zabbix_ctl import ZabbixCTL
 
 
 def zabbix_auth(host, username, password, basicauth_username=None, basicauth_password=None):
+    """
+    Authentication zabbix.
+
+    Parameters
+    ----------
+    host: str
+        api server address
+    username: str
+        login username
+    password: str
+        login password
+    basicauth_username: str
+        basic auth username
+    basicauth_password: str
+        basic auth password
+
+    Returns
+    -------
+    ZabbixAPI
+        zabbixAPI object
+
+    """
     zapi = ZabbixAPI(host)
     if basicauth_username is not None and basicauth_password is not None:
         # Basic 認証

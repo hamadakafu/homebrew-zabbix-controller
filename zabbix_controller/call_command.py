@@ -2,7 +2,7 @@ import zabbix_controller
 
 
 def call_command():
-    zabbix_controller.command.main()
+    zabbix_controller.cli.main()
 
 
 if __name__ == '__main__':
