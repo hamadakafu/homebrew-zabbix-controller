@@ -3,8 +3,9 @@ require "formula"
 class HomebrewZabbixController < Formula
   desc ""
   homepage ""
-  url "https://github.com/hamadakafu/homebrew-zabbix-controller/releases/download/v0.1.11/zabbixctl"
-  sha256 "9269cd74e89c3c569a9c056cd1f83612f3f0e9974da3d2aa60fd666703c88ce9"
+  # url "https://github.com/hamadakafu/homebrew-zabbix-controller/releases/download/v0.1.11/zabbixctl"
+  url "https://github.com/hamadakafu/homebrew-zabbix-controller.git",
+    :tag => "v0.1.11"
 
   # depends_on "cmake" => :build
 
