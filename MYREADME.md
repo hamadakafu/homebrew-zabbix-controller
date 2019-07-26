@@ -83,3 +83,18 @@ filter={'hostid': '10000'} # ok
 ```bash
 ./makebin.sh
 ```
+
+## release手順
+
+```
+poetry version # バージョン上げる
+poetry build
+poetry publish # pypiにアップロード
+
+./makebin.sh
+vim zabbix.rb  # zabbix.rbのバージョン上げる
+git add *
+git commit
+git tag v.0.0.0
+git push origin v0.0.0
+```

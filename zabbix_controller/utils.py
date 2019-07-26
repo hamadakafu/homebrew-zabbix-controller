@@ -158,7 +158,7 @@ def check_dry_run(func):
         if obj.main_options['dry_run']:
             click.echo(f'{obj}')
             # TODO: 関数のテストの仕方を考えている...zapiが呼ばれた回数をテストすれば良さそう
-            exit(0)
+            sys.exit(0)
 
         result = func(obj, *args, **kwargs)
         return result

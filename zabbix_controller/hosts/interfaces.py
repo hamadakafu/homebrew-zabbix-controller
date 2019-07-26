@@ -1,3 +1,4 @@
+import sys
 import re
 import copy
 import pprint
@@ -178,7 +179,7 @@ def update(obj, data, yes):
 
     if len(selected_interfaces) == 0:
         click.echo('There is no interface.')
-        exit(0)
+        sys.exit(0)
 
     if yes or click.confirm(
             (f'update interfaceids: {pprint.pformat([itf["interfaceid"] for itf in selected_interfaces])}\n'
@@ -216,7 +217,7 @@ def usedns(obj, yes):
 
     if len(selected_interfaces) == 0:
         click.echo('There is no interface.')
-        exit(0)
+        sys.exit(0)
 
     if yes or click.confirm(
             f'usedns: interfaceids{pprint.pformat([itf["interfaceid"] for itf in selected_interfaces])}\n',

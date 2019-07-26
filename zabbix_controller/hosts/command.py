@@ -1,4 +1,5 @@
 import pprint
+import sys
 
 import click
 
@@ -49,7 +50,7 @@ def hosts(obj, match, time_range):
 
     if len(_hosts) == 0:
         click.echo('There is no host')
-        exit(0)
+        sys.exit(0)
 
     obj.hosts = _hosts
 
@@ -93,7 +94,7 @@ def delete(obj, yes):
 
     if len(selected_hosts) == 0:
         click.echo('There is no host.')
-        exit(0)
+        sys.exit(0)
 
     if yes or click.confirm(f'delete: {[host["name"] for host in selected_hosts]}',
                             default=False,
@@ -126,7 +127,7 @@ def disable(obj, yes):
 
     if len(selected_hosts) == 0:
         click.echo('There is no host.')
-        exit(0)
+        sys.exit(0)
 
     if yes or click.confirm(f'disable: {pprint.pformat([host["name"] for host in selected_hosts])}',
                             default=False,
@@ -165,7 +166,7 @@ def update(obj, data, yes):
 
     if len(selected_hosts) == 0:
         click.echo('There is no host.')
-        exit(0)
+        sys.exit(0)
 
     if yes or click.confirm((f'update: {pprint.pformat([host["name"] for host in selected_hosts])}\n'
                              f'data: {pprint.pformat(data)}'),

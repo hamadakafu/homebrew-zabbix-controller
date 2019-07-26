@@ -1,6 +1,7 @@
 import re
 import pprint
 import copy
+import sys
 
 import click
 from pyzabbix import ZabbixAPI
@@ -127,7 +128,7 @@ def delete(obj, yes):
 
     if len(selected_graphs) == 0:
         click.echo('There is no graph.')
-        exit(0)
+        sys.exit(0)
 
     if yes or click.confirm(
             f'delete:\n{pprint.pformat([(graph["host"], graph["name"]) for graph in selected_graphs])}',
