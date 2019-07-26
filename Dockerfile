@@ -43,7 +43,7 @@ RUN eval "$(pyenv init -)" && \
     eval "$(pyenv virtualenv-init -)" && \
     pip install --no-cache-dir "poetry==0.12.17"
 
-COPY pyproject.toml poetry.lock README.md LICENSE.txt ./
+COPY pyproject.toml poetry.lock README.md LICENSE ./
 COPY zabbix_controller ./zabbix_controller
 
 RUN eval "$(pyenv init -)" && \
