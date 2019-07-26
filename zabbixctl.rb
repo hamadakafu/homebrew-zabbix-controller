@@ -18,7 +18,7 @@ class Zabbixctl < Formula
     #                       "--prefix=#{prefix}"
     # system "cmake", ".", *std_cmake_args
     # system "make", "install" # if this fails, try separate make/make install steps
-    bin.install '/dist/zabbixctl'
+    bin.install '/brew-bin/zabbixctl'
   end
 
   test do

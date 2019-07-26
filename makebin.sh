@@ -10,4 +10,4 @@ docker stop zabbixctl_builder
 mv -f zabbixctl bin/zabbixctl
 
 # for macos
-pyinstaller zabbix_controller/call_command.py --onefile -n zabbixctl
+pyinstaller zabbix_controller/call_command.py --onefile -n zabbixctl --distpath brew-bin
