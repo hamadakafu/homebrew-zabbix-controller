@@ -18,7 +18,7 @@ class Zabbixctl < Formula
                           "--prefix=#{prefix}"
     # system "cmake", ".", *std_cmake_args
     # system "make", "install" # if this fails, try separate make/make install steps
-    bin.install '/bin/zabbixctl'
+    bin.install '/dist/zabbixctl'
   end
 
   test do
@@ -31,6 +31,6 @@ class Zabbixctl < Formula
     #
     # The installed folder is not in the path, so use the entire path to any
     # executables being tested: `system "#{bin}/program", "do", "something"`.
-    system "false"
+    # system "false"
   end
 end
