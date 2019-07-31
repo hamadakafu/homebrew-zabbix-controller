@@ -1,4 +1,5 @@
 import pprint
+import json
 
 
 class ZabbixCTL(object):
@@ -10,10 +11,10 @@ class ZabbixCTL(object):
         self.main_options = kwargs
 
     def __repr__(self):
-        return 'zabbixctl-options:\n{}\nhosts:\n{}\ngraphs:\n{}\ninterfaces:\n{}'.format(
-            pprint.pformat(self.main_options),
-            pprint.pformat(self.hosts),
-            pprint.pformat(self.graphs),
-            pprint.pformat(self.interfaces),
-        )
-
+        zctl_json = json.dumps({
+            'zabbxctl_options': self.main_options,
+            'hosts': self.hosts,
+            'graphs': self.graphs,
+            'interfaces': self.interfaces,
+        })
+        return f'{zctl_json}'

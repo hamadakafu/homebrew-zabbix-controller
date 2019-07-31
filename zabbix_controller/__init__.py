@@ -1,4 +1,5 @@
 # TODO: --dry-runをつかってテストできるようにする
+# TODO: jsonで出力するようにする．click.testing.CLIRunnerでjsonをキャッチしてstdoutとして出力することができるようになる
 
 # TODO: 本当は，gcpのインスタンスがあるかどうかのチェックをする
 # TODO: zabbixにあるhostidとかhostnameと比較して，集合の差をとる (zabbix.hostname - gcp.instancename)

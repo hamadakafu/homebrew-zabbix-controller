@@ -1,5 +1,6 @@
 import re
 import pprint
+import json
 import copy
 import sys
 
@@ -99,7 +100,7 @@ def graphs(obj: ZabbixCTL, match):
 @graphs.command(name='list', help='list graph')
 @click.pass_obj
 def _list(obj):
-    click.echo(pprint.pformat(obj.graphs))
+    click.echo(f'{json.dumps({"graphs": obj.graphs})}')
 
 
 @graphs.command(help='delete graph')
@@ -127,7 +128,7 @@ def delete(obj, yes):
         selected_graphs = obj.graphs
 
     if len(selected_graphs) == 0:
-        click.echo('There is no graph.')
+        click.echo(f'{json.dumps({"message": "There is no graph."})}')
         sys.exit(0)
 
     if yes or click.confirm(

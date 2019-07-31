@@ -1,4 +1,5 @@
 import pprint
+import json
 import sys
 
 import click
@@ -49,7 +50,7 @@ def hosts(obj, match, time_range):
     obj.hosts = _hosts
 
     if len(_hosts) == 0:
-        click.echo('There is no host')
+        click.echo(f'{json.dumps({"message": "There is not host."})}')
         sys.exit(0)
 
     obj.hosts = _hosts
@@ -66,7 +67,7 @@ def _list(obj):
     obj: ZabbixCTL
         Including command state.
     """
-    click.echo(pprint.pformat(obj.hosts))
+    click.echo(f'{json.dumps({"hosts": obj.hosts})}')
 
 
 @hosts.command(help='delete hosts')
@@ -93,7 +94,7 @@ def delete(obj, yes):
         selected_hosts = obj.hosts
 
     if len(selected_hosts) == 0:
-        click.echo('There is no host.')
+        click.echo(f'{json.dumps({"message": "There is not host."})}')
         sys.exit(0)
 
     if yes or click.confirm(f'delete: {[host["name"] for host in selected_hosts]}',
@@ -126,7 +127,7 @@ def disable(obj, yes):
         selected_hosts = obj.hosts
 
     if len(selected_hosts) == 0:
-        click.echo('There is no host.')
+        click.echo(f'{json.dumps({"message": "There is not host."})}')
         sys.exit(0)
 
     if yes or click.confirm(f'disable: {pprint.pformat([host["name"] for host in selected_hosts])}',
@@ -135,7 +136,7 @@ def disable(obj, yes):
                             show_default=True):
         data = {'status': 1}
         result = update_hosts(obj.zapi, selected_hosts, data)
-        click.echo(pprint.pformat(result))
+        click.echo(f'{json.dumps(result)}')
 
 
 @hosts.command(help='update hosts')
@@ -165,7 +166,7 @@ def update(obj, data, yes):
         selected_hosts = obj.hosts
 
     if len(selected_hosts) == 0:
-        click.echo('There is no host.')
+        click.echo(f'{json.dumps({"message": "There is not host."})}')
         sys.exit(0)
 
     if yes or click.confirm((f'update: {pprint.pformat([host["name"] for host in selected_hosts])}\n'
@@ -174,4 +175,4 @@ def update(obj, data, yes):
                             abort=True,
                             show_default=True):
         result = update_hosts(obj.zapi, selected_hosts, data)
-        click.echo(pprint.pformat(result))
+        click.echo(f'{json.dumps(result)}')

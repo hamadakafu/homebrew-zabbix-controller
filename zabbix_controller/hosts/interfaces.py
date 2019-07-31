@@ -2,6 +2,7 @@ import sys
 import re
 import copy
 import pprint
+import json
 
 import click
 from pyzabbix import ZabbixAPI
@@ -150,7 +151,7 @@ def _list(obj):
     obj: ZabbixCTL
 
     """
-    click.echo(pprint.pformat(obj.interfaces))
+    click.echo(f'{json.dumps({"interfaces": obj.interfaces})}')
 
 
 @interfaces.command(help='update interfaces')
@@ -178,8 +179,8 @@ def update(obj, data, yes):
         selected_interfaces = obj.interfaces
 
     if len(selected_interfaces) == 0:
-        click.echo('There is no interface.')
-        sys.exit(0)
+        click.echo(f'{json.dumps({"message": "There is not host."})}')
+        sys.exit()
 
     if yes or click.confirm(
             (f'update interfaceids: {pprint.pformat([itf["interfaceid"] for itf in selected_interfaces])}\n'
@@ -188,7 +189,7 @@ def update(obj, data, yes):
             abort=True,
             show_default=True):
         result = update_interfaces(obj.zapi, selected_interfaces, data)
-        click.echo(pprint.pformat(result))
+        click.echo(f'{json.dumps(result)}')
 
 
 @interfaces.command(help='change from use ip -> use dns')
@@ -216,7 +217,7 @@ def usedns(obj, yes):
         selected_interfaces = obj.interfaces
 
     if len(selected_interfaces) == 0:
-        click.echo('There is no interface.')
+        click.echo(f'{json.dumps({"message": "There is no interface."})}')
         sys.exit(0)
 
     if yes or click.confirm(
@@ -225,4 +226,4 @@ def usedns(obj, yes):
             abort=True,
             show_default=True):
         result = update_interfaces(obj.zapi, selected_interfaces, {'useip': 0})
-        click.echo(pprint.pformat(result))
+        click.echo(f'{json.dumps(result)}')
