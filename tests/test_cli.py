@@ -38,6 +38,11 @@ def test_main():
             ],
             stdout=f'{json.dumps({"graphs": [{"name": "hhh_graph"}]})}\n'
         ),
+        Data(
+            args=['--version'],
+            mocked=[],
+            stdout=f'zabbixctl 0.1.17\n'
+        ),
     ]
 
     for data in table:

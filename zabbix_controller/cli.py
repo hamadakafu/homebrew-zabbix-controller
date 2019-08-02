@@ -1,9 +1,11 @@
 from click import Context
+
 from .utils import *
 
 
 @click.group(help=('Entry point.\n'
-                   'Initialize ZabbixAPI.')
+                   'Initialize ZabbixAPI.'),
+             invoke_without_command=True,
              )
 @click.option('-aa', '--apiserver-address', default='http://localhost:8081',
               help=('Zabbix api server address.\n'
@@ -21,6 +23,7 @@ from .utils import *
               help=('Turn on interactive mode.\n'
                     'Confirmation is still available.'))
 @click.option('--called', default='cli', help='This option is for flask.')
+@click.option('-v', '--version', default=False, is_flag=True)
 @click.pass_context
 def main(
         ctx,
@@ -30,6 +33,7 @@ def main(
         dry_run,
         interactive,
         called,
+        version,
 ):
     """
     Initialize ZabbixCTL
@@ -56,10 +60,16 @@ def main(
         This is only available in cli.
     called: str
         cli or http
+    version: bool
+        flag for --version
     Returns
     -------
 
     """
-
-    zapi = zabbix_auth(apiserver_address, username, password, basicauth_username, basicauth_password)
-    ctx.obj = ZabbixCTL(zapi, dry_run=dry_run, interactive=interactive, called=called)
+    if version or ctx.invoked_subcommand is None:
+        from . import VERSION
+        click.echo(f'zabbixctl {VERSION}')
+        sys.exit()
+    else:
+        zapi = zabbix_auth(apiserver_address, username, password, basicauth_username, basicauth_password)
+        ctx.obj = ZabbixCTL(zapi, dry_run=dry_run, interactive=interactive, called=called)
