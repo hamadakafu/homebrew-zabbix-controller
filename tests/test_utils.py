@@ -8,8 +8,8 @@ def test_validate_match():
     ctx = mock.Mock()
     param = mock.Mock()
     table = [
-        ('{"name": "hoge"}', [{'name': 'hoge'}], True),
-        ('{"state": 0}', [{'state': 0}], True),
+        ('{"name": "hhh"}', [{'name': 'hhh'}], True),
+        ('{"state": 0}', [{'state': '0'}], True),
         ('{"state": "0"}', [{'state': '0'}], True),
         (None, None, True),
     ]

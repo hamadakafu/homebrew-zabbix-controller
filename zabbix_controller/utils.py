@@ -62,6 +62,9 @@ def validate_match(ctx, param, values):
         return None
 
     values = validate_json(ctx, param, values)
+    for k, v in values.items():
+        if isinstance(v, int):
+            values[k] = str(v)
 
     if isinstance(values, dict):
         values = [values]
