@@ -41,7 +41,7 @@ def test_main():
         Data(
             args=['--version'],
             mocked=[],
-            stdout=f'zabbixctl 0.1.17\n'
+            stdout=f'zabbixctl 0.1.18\n'
         ),
     ]
 

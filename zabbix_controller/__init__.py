@@ -8,4 +8,4 @@ from . import utils
 from . import hosts
 from . import zabbix_ctl
 
-VERSION = "0.1.17"
+VERSION = "0.1.18"
