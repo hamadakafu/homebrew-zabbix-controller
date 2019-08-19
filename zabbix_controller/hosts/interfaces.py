@@ -210,11 +210,13 @@ def usedns(obj, yes):
         If yes is true, no confirmation update or delete.
 
     """
+    # ignore interface which dns is empty string
+    formatted_interfaces = list(filter(lambda itf: len(itf['dns']) > 0, obj.interfaces))
 
     if obj.main_options['interactive']:
-        selected_interfaces = ask_interfaces(obj.interfaces)
+        selected_interfaces = ask_interfaces(formatted_interfaces)
     else:
-        selected_interfaces = obj.interfaces
+        selected_interfaces = formatted_interfaces
 
     if len(selected_interfaces) == 0:
         click.echo(f'{json.dumps({"message": "There is no interface."})}')

@@ -17,6 +17,11 @@ class Data(object):
 def test_main():
     table = [
         Data(
+            args=['--version'],
+            mocked=[],
+            stdout=f'zabbixctl 0.1.19\n'
+        ),
+        Data(
             args=['--dry-run', 'hosts', 'list'],
             mocked=[
                 ('zabbix_controller.hosts.command.get_hosts', []),
@@ -37,11 +42,6 @@ def test_main():
                 ('zabbix_controller.hosts.graphs.get_graphs', [{'name': 'hhh_graph'}]),
             ],
             stdout=f'{json.dumps({"graphs": [{"name": "hhh_graph"}]})}\n'
-        ),
-        Data(
-            args=['--version'],
-            mocked=[],
-            stdout=f'zabbixctl 0.1.18\n'
         ),
     ]
 
